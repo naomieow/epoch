@@ -1,16 +1,23 @@
-import { MCFunction, Objective, _ } from 'sandstone';
+import { MCFunction, Objective, _, Score } from 'sandstone';
 
 const constants = Objective.create('epoch.constants', 'dummy', [{text: 'Epoch Constants'}])
 const daysOfMonth = Objective.create('epoch.daysinmon', 'dummy', [{text: 'Days in a Month'}])
 const dateTime = Objective.create('epoch.date_time', 'dummy', [{text: 'DateTime'}]);
 
 const unix = dateTime('$unix');
-const hour = dateTime('$hrs');
-const day = dateTime('$day');
-const months = dateTime('$mon');
-const years = dateTime('$yrs');
-const mins = dateTime('$mins');
-const secs = dateTime('$secs');
+
+const jan = daysOfMonth("$jan")
+const feb = daysOfMonth("$feb")
+const mar = daysOfMonth("$mar")
+const apr = daysOfMonth("$apr")
+const may = daysOfMonth("$may")
+const jun = daysOfMonth("$jun")
+const jul = daysOfMonth("$jul")
+const aug = daysOfMonth("$aug")
+const sep = daysOfMonth("$sep")
+const oct = daysOfMonth("$oct")
+const nov = daysOfMonth("$nov")
+const dec = daysOfMonth("$dec")
 
 const c24x60x60 = constants("$24x60x60");
 const c3600 = constants("$3600");
@@ -30,21 +37,68 @@ const runLoop = dateTime('#loopRunning');
 const daysTillNow = dateTime('#daysTillNow');
 const extraTime = dateTime('#extraTime');
 const currYear = dateTime('#currYear');
+const extraDays = dateTime('#extraDays');
 const flag = dateTime('#flag');
+const month = dateTime('#month');
+const index = dateTime('#index');
+const domTracker = dateTime('#domTracker');
+const date = dateTime('#date');
+const hours = dateTime('#hours');
+const minutes = dateTime('#minutes');
+const seconds = dateTime('#seconds');
+
+function getMonthFromIndex(sel: Score<string>) {
+    _.if(sel.equalTo(1), () => {
+        domTracker.set(jan);
+    })
+    .elseIf(sel.equalTo(2), () => {
+        domTracker.set(feb)
+    })
+    .elseIf(sel.equalTo(3), () => {
+        domTracker.set(feb)
+    })
+    .elseIf(sel.equalTo(4), () => {
+        domTracker.set(feb)
+    })
+    .elseIf(sel.equalTo(5), () => {
+        domTracker.set(feb)
+    })
+    .elseIf(sel.equalTo(6), () => {
+        domTracker.set(feb)
+    })
+    .elseIf(sel.equalTo(7), () => {
+        domTracker.set(feb)
+    })
+    .elseIf(sel.equalTo(8), () => {
+        domTracker.set(feb)
+    })
+    .elseIf(sel.equalTo(9), () => {
+        domTracker.set(feb)
+    })
+    .elseIf(sel.equalTo(10), () => {
+        domTracker.set(feb)
+    })
+    .elseIf(sel.equalTo(11), () => {
+        domTracker.set(feb)
+    })
+    .elseIf(sel.equalTo(12), () => {
+        domTracker.set(feb)
+    })
+}
 
 MCFunction("constants", () => {
-    daysOfMonth("$jan").set(31);
-    daysOfMonth("$feb").set(28);
-    daysOfMonth("$mar").set(31);
-    daysOfMonth("$apr").set(30);
-    daysOfMonth("$may").set(31);
-    daysOfMonth("$jun").set(30);
-    daysOfMonth("$jul").set(31);
-    daysOfMonth("$aug").set(31);
-    daysOfMonth("$sep").set(30);
-    daysOfMonth("$oct").set(31);
-    daysOfMonth("$nov").set(30);
-    daysOfMonth("$dec").set(31);
+    jan.set(31);
+    feb.set(28);
+    mar.set(31);
+    apr.set(30);
+    may.set(31);
+    jun.set(30);
+    jul.set(31);
+    aug.set(31);
+    sep.set(30);
+    oct.set(31);
+    nov.set(30);
+    dec.set(31);
 
     c24x60x60.set(20*60*60);
     c3600.set(3600);
@@ -62,19 +116,101 @@ MCFunction("constants", () => {
     
 }, { runOnLoad: true })
 
-function calcCurrYear() {
-    _.while(runLoop.equalTo(c1), () => {
-        _.if(_.or(currYear.moduloBy(c400).equalTo(c0), _.and(currYear.moduloBy(c4).equalTo(c0), currYear.moduloBy(c100).notEqualTo(c0))), () => {
-            _.if(daysTillNow.lessThan(c366), () => {
-                _.
-            }) 
-        })
-    })
-}
 
 MCFunction("unix_ms_to_datetime", () => {
     daysTillNow.set(unix).divide(c24x60x60);
     extraTime.set(unix).modulo(c24x60x60);
     currYear.set(c1970);
-    calcCurrYear();
+    runLoop.set(c1);
+
+    _.while(runLoop.equalTo(c1), () => {
+        _.if(_.or(currYear.moduloBy(c400).equalTo(c0), _.and(currYear.moduloBy(c4).equalTo(c0), currYear.moduloBy(c100).notEqualTo(c0))), () => {
+            _.if(daysTillNow.lessThan(c366), () => {
+                runLoop.set(c0);
+            }) 
+            _.if(runLoop.equalTo(c1), () => {
+                daysTillNow.remove(c366);
+            })
+        })
+        .else(() => {
+            _.if(daysTillNow.lessThan(c365), () => {
+                runLoop.set(c0);
+            }) 
+            _.if(runLoop.equalTo(c1), () => {
+                daysTillNow.remove(c365);
+            })
+        })
+        currYear.add(c1);
+    })
+
+    runLoop.reset();
+
+    extraDays.set(daysTillNow).add(c1);
+
+    _.if(_.or((currYear.moduloBy(c400).equalTo(c0)), _.and(currYear.moduloBy(c4).equalTo(c0), currYear.moduloBy(c100).equalTo(c0))), () => {
+        flag.set(c1);
+    })
+
+    month.set(c0);
+    index.set(c0);
+
+    _.if(flag.equalTo(c1), () => {
+        runLoop.set(c1);
+        _.while(runLoop.equalTo(c1), () => {
+            _.if(index.equalTo(c1), () => {
+                _.if(extraDays.minus(c29).lessThan(c0), () => {
+                    runLoop.set(c0);
+                })
+                _.if(runLoop.equalTo(c1), () => {
+                    month.add(c1);
+                    extraDays.remove(c29);
+                })
+            })
+            .else(() => {
+                getMonthFromIndex(index);
+                _.if(extraDays.minus(domTracker).lessThan(c0), () => {
+                    runLoop.set(c0);
+                })
+                _.if(runLoop.equalTo(c1), () => {
+                    month.add(c1);
+                    extraDays.remove(domTracker);
+                })
+            })
+            _.if(runLoop.equalTo(c1), () => {
+                index.add(c1);
+            })
+        })
+        runLoop.reset();
+    })
+    .else(() => {
+        runLoop.set(c1);
+        _.while(runLoop.equalTo(c1), () => {
+            _.if(extraDays.minus(domTracker).lessThan(c0), () => {
+                runLoop.set(c0);
+            })
+            _.if(runLoop.equalTo(c1), () => {
+                month.add(c1);
+                extraDays.remove(domTracker);
+                index.add(c1);
+            })
+        })
+    })
+
+    _.if(extraDays.greaterThan(0), () => {
+        month.add(c1);
+        date.set(extraDays);
+    })
+    .else(() => {
+        _.if(_.and(month.equalTo(c2), flag.equalTo(c1)), () => {
+            date.set(c29);
+        })
+        .else(() => {
+            getMonthFromIndex(index.minus(c1));
+            date.set(domTracker);
+        })
+    })
+
+    hours.set(extraTime).dividedBy(c3600);
+    minutes.set(extraTime).moduloBy(c3600).dividedBy(c60);
+    seconds.set(extraTime).moduloBy(c3600).moduloBy(c60);
 })
