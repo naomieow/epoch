@@ -1,4 +1,4 @@
-import { MCFunction, Objective, _, Score } from 'sandstone';
+import { MCFunction, Objective, _, Score, tellraw, Selector } from 'sandstone';
 
 const constants = Objective.create('epoch.constants', 'dummy', [{text: 'Epoch Constants'}])
 const daysOfMonth = Objective.create('epoch.daysinmon', 'dummy', [{text: 'Days in a Month'}])
@@ -47,42 +47,42 @@ const hours = dateTime('#hours');
 const minutes = dateTime('#minutes');
 const seconds = dateTime('#seconds');
 
-function getMonthFromIndex(sel: Score<string>) {
-    _.if(sel.equalTo(1), () => {
+function getMonthFromIndex() {
+    _.if(index.equalTo(1), () => {
         domTracker.set(jan);
     })
-    .elseIf(sel.equalTo(2), () => {
+    .elseIf(index.equalTo(2), () => {
         domTracker.set(feb)
     })
-    .elseIf(sel.equalTo(3), () => {
-        domTracker.set(feb)
+    .elseIf(index.equalTo(3), () => {
+        domTracker.set(mar)
     })
-    .elseIf(sel.equalTo(4), () => {
-        domTracker.set(feb)
+    .elseIf(index.equalTo(4), () => {
+        domTracker.set(apr)
     })
-    .elseIf(sel.equalTo(5), () => {
-        domTracker.set(feb)
+    .elseIf(index.equalTo(5), () => {
+        domTracker.set(may)
     })
-    .elseIf(sel.equalTo(6), () => {
-        domTracker.set(feb)
+    .elseIf(index.equalTo(6), () => {
+        domTracker.set(jun)
     })
-    .elseIf(sel.equalTo(7), () => {
-        domTracker.set(feb)
+    .elseIf(index.equalTo(7), () => {
+        domTracker.set(jul)
     })
-    .elseIf(sel.equalTo(8), () => {
-        domTracker.set(feb)
+    .elseIf(index.equalTo(8), () => {
+        domTracker.set(aug)
     })
-    .elseIf(sel.equalTo(9), () => {
-        domTracker.set(feb)
+    .elseIf(index.equalTo(9), () => {
+        domTracker.set(sep)
     })
-    .elseIf(sel.equalTo(10), () => {
-        domTracker.set(feb)
+    .elseIf(index.equalTo(10), () => {
+        domTracker.set(oct)
     })
-    .elseIf(sel.equalTo(11), () => {
-        domTracker.set(feb)
+    .elseIf(index.equalTo(11), () => {
+        domTracker.set(nov)
     })
-    .elseIf(sel.equalTo(12), () => {
-        domTracker.set(feb)
+    .elseIf(index.equalTo(12), () => {
+        domTracker.set(dec)
     })
 }
 
@@ -117,13 +117,30 @@ MCFunction("constants", () => {
 }, { runOnLoad: true })
 
 
-MCFunction("unix_ms_to_datetime", () => {
-    daysTillNow.set(unix).divide(c24x60x60);
-    extraTime.set(unix).modulo(c24x60x60);
-    currYear.set(c1970);
-    runLoop.set(c1);
+const all = Selector("@a");
 
+MCFunction("unix_ms_to_datetime", () => {
+    runLoop.set(c0);
+    daysTillNow.set(c0);
+    extraTime.set(c0);
+    currYear.set(c0);
+    extraDays.set(c0);
+    flag.set(c0);
+    month.set(c0);
+    index.set(c0);
+    domTracker.set(c0);
+    date.set(c0);
+    hours.set(c0);
+    minutes.set(c0);
+    seconds.set(c0);
+
+    daysTillNow.set(unix.dividedBy(c24x60x60));
+    extraTime.set(unix.moduloBy(c24x60x60));
+    currYear.set(c1970);
+
+    runLoop.set(c1);
     _.while(runLoop.equalTo(c1), () => {
+        tellraw(all, "stuck in 1");
         _.if(_.or(currYear.moduloBy(c400).equalTo(c0), _.and(currYear.moduloBy(c4).equalTo(c0), currYear.moduloBy(c100).notEqualTo(c0))), () => {
             _.if(daysTillNow.lessThan(c366), () => {
                 runLoop.set(c0);
@@ -140,14 +157,15 @@ MCFunction("unix_ms_to_datetime", () => {
                 daysTillNow.remove(c365);
             })
         })
-        currYear.add(c1);
+        _.if(runLoop.equalTo(c1), () => {
+            currYear.add(c1);
+        })
     })
-
     runLoop.reset();
 
     extraDays.set(daysTillNow).add(c1);
 
-    _.if(_.or((currYear.moduloBy(c400).equalTo(c0)), _.and(currYear.moduloBy(c4).equalTo(c0), currYear.moduloBy(c100).equalTo(c0))), () => {
+    _.if(_.or((currYear.moduloBy(c400).equalTo(c0)), _.and(currYear.moduloBy(c4).equalTo(c0), currYear.moduloBy(c100).notEqualTo(c0))), () => {
         flag.set(c1);
     })
 
@@ -157,6 +175,7 @@ MCFunction("unix_ms_to_datetime", () => {
     _.if(flag.equalTo(c1), () => {
         runLoop.set(c1);
         _.while(runLoop.equalTo(c1), () => {
+            tellraw(all, "stuck in 2");
             _.if(index.equalTo(c1), () => {
                 _.if(extraDays.minus(c29).lessThan(c0), () => {
                     runLoop.set(c0);
@@ -167,7 +186,7 @@ MCFunction("unix_ms_to_datetime", () => {
                 })
             })
             .else(() => {
-                getMonthFromIndex(index);
+                getMonthFromIndex();
                 _.if(extraDays.minus(domTracker).lessThan(c0), () => {
                     runLoop.set(c0);
                 })
@@ -185,6 +204,8 @@ MCFunction("unix_ms_to_datetime", () => {
     .else(() => {
         runLoop.set(c1);
         _.while(runLoop.equalTo(c1), () => {
+            tellraw(all, "stuck in 3");
+            getMonthFromIndex();
             _.if(extraDays.minus(domTracker).lessThan(c0), () => {
                 runLoop.set(c0);
             })
@@ -196,7 +217,7 @@ MCFunction("unix_ms_to_datetime", () => {
         })
     })
 
-    _.if(extraDays.greaterThan(0), () => {
+    _.if(extraDays.greaterThan(c0), () => {
         month.add(c1);
         date.set(extraDays);
     })
@@ -205,7 +226,8 @@ MCFunction("unix_ms_to_datetime", () => {
             date.set(c29);
         })
         .else(() => {
-            getMonthFromIndex(index.minus(c1));
+            index.remove(c1);
+            getMonthFromIndex();
             date.set(domTracker);
         })
     })
