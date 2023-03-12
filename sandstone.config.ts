@@ -2,8 +2,8 @@ import type { SandstoneConfig } from 'sandstone'
 
 export default {
   name: 'epoch',
-  description: [ 'A ', { text: 'Sandstone', color: 'gold' }, ' data pack.' ],
-  formatVersion: 7,
+  description: ['Library that takes unix time in and returns realtime'],
+  formatVersion: 12,
   namespace: 'epoch',
   packUid: 'a3ecArg8',
   saveOptions: { path: './.sandstone/output/datapack' },
