@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "suso.str:load",
+    "epoch:__init__",
+    "epoch:constants"
+  ]
+}

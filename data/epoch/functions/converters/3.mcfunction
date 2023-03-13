@@ -1,0 +1,10 @@
+execute if data storage epoch:datetime splitunix{3:"0"} run scoreboard players set #temp epoch.date_time 0
+execute if data storage epoch:datetime splitunix{3:"1"} run scoreboard players set #temp epoch.date_time 1
+execute if data storage epoch:datetime splitunix{3:"2"} run scoreboard players set #temp epoch.date_time 2
+execute if data storage epoch:datetime splitunix{3:"3"} run scoreboard players set #temp epoch.date_time 3
+execute if data storage epoch:datetime splitunix{3:"4"} run scoreboard players set #temp epoch.date_time 4
+execute if data storage epoch:datetime splitunix{3:"5"} run scoreboard players set #temp epoch.date_time 5
+execute if data storage epoch:datetime splitunix{3:"6"} run scoreboard players set #temp epoch.date_time 6
+execute if data storage epoch:datetime splitunix{3:"7"} run scoreboard players set #temp epoch.date_time 7
+execute if data storage epoch:datetime splitunix{3:"8"} run scoreboard players set #temp epoch.date_time 8
+execute if data storage epoch:datetime splitunix{3:"9"} run scoreboard players set #temp epoch.date_time 9

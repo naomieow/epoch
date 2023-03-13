@@ -1,0 +1,13 @@
+scoreboard players reset cond_0 sandstone
+execute store success score cond_0 sandstone if score #index epoch.date_time matches 0 run scoreboard players operation #daysInMonth epoch.date_time = $jan epoch.daysinmon
+execute unless score cond_0 sandstone matches 0.. if score #index epoch.date_time matches 1 store success score cond_0 sandstone run scoreboard players operation #daysInMonth epoch.date_time = $feb epoch.daysinmon
+execute unless score cond_0 sandstone matches 0.. if score #index epoch.date_time matches 2 store success score cond_0 sandstone run scoreboard players operation #daysInMonth epoch.date_time = $mar epoch.daysinmon
+execute unless score cond_0 sandstone matches 0.. if score #index epoch.date_time matches 3 store success score cond_0 sandstone run scoreboard players operation #daysInMonth epoch.date_time = $apr epoch.daysinmon
+execute unless score cond_0 sandstone matches 0.. if score #index epoch.date_time matches 4 store success score cond_0 sandstone run scoreboard players operation #daysInMonth epoch.date_time = $may epoch.daysinmon
+execute unless score cond_0 sandstone matches 0.. if score #index epoch.date_time matches 5 store success score cond_0 sandstone run scoreboard players operation #daysInMonth epoch.date_time = $jun epoch.daysinmon
+execute unless score cond_0 sandstone matches 0.. if score #index epoch.date_time matches 6 store success score cond_0 sandstone run scoreboard players operation #daysInMonth epoch.date_time = $jul epoch.daysinmon
+execute unless score cond_0 sandstone matches 0.. if score #index epoch.date_time matches 7 store success score cond_0 sandstone run scoreboard players operation #daysInMonth epoch.date_time = $aug epoch.daysinmon
+execute unless score cond_0 sandstone matches 0.. if score #index epoch.date_time matches 8 store success score cond_0 sandstone run scoreboard players operation #daysInMonth epoch.date_time = $sep epoch.daysinmon
+execute unless score cond_0 sandstone matches 0.. if score #index epoch.date_time matches 9 store success score cond_0 sandstone run scoreboard players operation #daysInMonth epoch.date_time = $oct epoch.daysinmon
+execute unless score cond_0 sandstone matches 0.. if score #index epoch.date_time matches 10 store success score cond_0 sandstone run scoreboard players operation #daysInMonth epoch.date_time = $nov epoch.daysinmon
+execute unless score cond_0 sandstone matches 0.. if score #index epoch.date_time matches 11 store success score cond_0 sandstone run scoreboard players operation #daysInMonth epoch.date_time = $dec epoch.daysinmon

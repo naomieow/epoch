@@ -1,0 +1,12 @@
+scoreboard players set $jan epoch.daysinmon 31
+scoreboard players set $feb epoch.daysinmon 28
+scoreboard players set $mar epoch.daysinmon 31
+scoreboard players set $apr epoch.daysinmon 30
+scoreboard players set $may epoch.daysinmon 31
+scoreboard players set $jun epoch.daysinmon 30
+scoreboard players set $jul epoch.daysinmon 31
+scoreboard players set $aug epoch.daysinmon 31
+scoreboard players set $sep epoch.daysinmon 30
+scoreboard players set $oct epoch.daysinmon 31
+scoreboard players set $nov epoch.daysinmon 30
+scoreboard players set $dec epoch.daysinmon 31
